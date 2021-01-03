@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "esr scripts/build.ts",
+    "start": "esr scripts/watch.ts",
     "type-checking": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,6 +31,8 @@
     "typescript": "^4.1.3"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "esbuild-runner": "^1.3.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
