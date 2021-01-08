@@ -4,7 +4,8 @@ import { Cartao } from './cartao'
 import { Button, CircularProgress, Dialog } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
 import { novoPub } from '../state/novo';
-import { NovoEdit } from './novoEdit';
+import { NovoEdit } from './novoCrop';
+import { NovoGen } from './novoGen';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,12 +25,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function Novo() {
   const classes = useStyles();
-  const novoSt = novoPub.use().enviando[0]
+  const novoSt = novoPub.use()
+  const enviando = novoSt.enviando[0]
   return (
     <Cartao >
       <div className={classes.cartao}>
-        {novoSt ?
-          <NovoEdit />
+        {enviando ?
+          (novoSt.cropped ? <NovoGen /> : <NovoEdit />)
           :
           <div className={classes.buttons}>
             <DropzoneArea
