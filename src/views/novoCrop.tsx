@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { Area } from 'react-easy-crop/types';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Dialog, Fab, Slider } from '@material-ui/core';
+import { Dialog, Fab, Slider, Snackbar } from '@material-ui/core';
 import { AspectoFoto, aspectosFoto, novoPub } from '../state/novo';
 import CloseIcon from '@material-ui/icons/Close';
 import CropIcon from '@material-ui/icons/Crop';
@@ -58,6 +58,7 @@ const marks = [
 export function NovoEdit() {
   const classes = useStyles();
   const novoUrl = novoPub.use().enviando[0]
+  const [ajuda, setAjuda] = React.useState(true)
   const [crop, setCrop] = React.useState<Point>({
     x: 0, y: 0
   });
@@ -113,7 +114,15 @@ export function NovoEdit() {
         </Fab>
       </div>
     </div>
+    <Snackbar open={ajuda} autoHideDuration={6000} message="Use a rodinha do mouse para zoom
+        e arraste para mover a foto"
+      onClose={fechaAjuda}
+      anchorOrigin={({ vertical: 'top', horizontal: 'center' })}
+    />
   </Dialog >
+  function fechaAjuda() {
+    setAjuda(false)
+  }
   function angText(value: number) {
     return `${value}°`;
   }

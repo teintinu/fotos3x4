@@ -1,5 +1,5 @@
 import { Area } from 'react-easy-crop/types';
-import { AspectoFoto, PapelFoto } from '../state/novo';
+import { AspectoFoto, PapelFoto, pegaTamanho } from '../state/novo';
 
 export function createImage(url: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
@@ -56,22 +56,19 @@ export async function getCroppedImg(imageSrc: string, pixelCrop: Area, rotation 
   return canvas.toDataURL('image/jpeg');
 }
 
-export async function getPrintedImg(cropredImageSrc: string, aspecto: AspectoFoto, papel: PapelFoto, grade: boolean) {
+export async function getPrintedImg(cropredImageSrc: string, tamFoto: AspectoFoto, tamPapel: PapelFoto, grade: boolean) {
   const image = await createImage(cropredImageSrc)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('invalid canvas')
 
-  const [p]
+  const [pw, ph] = pegaTamanho(tamPapel)
+  const [fw, fh] = pegaTamanho(tamFoto)
 
-  const maxSize = Math.max(image.width, image.height)
-  const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2))
-
-  // set each dimensions to double largest dimension to allow for a safe area for the
-  // image to rotate in without being clipped by canvas context
-  canvas.width = safeArea
-  canvas.height = safeArea
-
+  const resolucao = image.width / pw
+  canvas.width = pw * resolucao
+  canvas.height = ph * resolucao
+  xx
   // translate canvas context to a central location on image to allow rotating around the center.
   ctx.translate(safeArea / 2, safeArea / 2)
   ctx.translate(-safeArea / 2, -safeArea / 2)

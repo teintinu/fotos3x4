@@ -48,3 +48,8 @@ export const novoPub = createPub({
     })
   }
 }))
+
+export function pegaTamanho(s: string) {
+  const [w, h] = s.split('×')
+  return [w && parseInt(w) || 0, h && parseInt(h) || 0]
+}
