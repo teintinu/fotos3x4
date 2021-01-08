@@ -8,6 +8,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import CropIcon from '@material-ui/icons/Crop';
 import { Point } from 'react-easy-crop/types';
 import { getCroppedImg } from '../utils/imageUtils';
+import { isMobile } from '../utils/isMobile';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -114,8 +115,12 @@ export function NovoEdit() {
         </Fab>
       </div>
     </div>
-    <Snackbar open={ajuda} autoHideDuration={6000} message="Use a rodinha do mouse para zoom
-        e arraste para mover a foto"
+    <Snackbar open={ajuda} autoHideDuration={6000} message=
+      {
+        isMobile ?
+          "Você pode arrastar e fazer zoom na foto" :
+          "Use a rodinha do mouse para zoom e arraste para mover a foto"
+      }
       onClose={fechaAjuda}
       anchorOrigin={({ vertical: 'top', horizontal: 'center' })}
     />

@@ -1,11 +1,12 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Cartao } from './cartao'
-import { Button, CircularProgress, Dialog } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
 import { novoPub } from '../state/novo';
 import { NovoEdit } from './novoCrop';
 import { NovoGen } from './novoGen';
+import { isMobile } from '../utils/isMobile';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +36,11 @@ export function Novo() {
           :
           <div className={classes.buttons}>
             <DropzoneArea
-              dropzoneText="Arrasta a foto pra cá ou clique aqui"
+              dropzoneText={
+                isMobile ?
+                  "Enviar foto da galeria" :
+                  "Arrasta a foto pra cá ou clique aqui"
+              }
               showPreviews={false}
               showPreviewsInDropzone={false}
               acceptedFiles={["image/*"]}
