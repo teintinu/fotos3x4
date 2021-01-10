@@ -21,65 +21,85 @@ export const papeisFoto: {
 export interface Foto {
   ts: number,
   cropped: string
+  grade: boolean
   tam: AspectoFoto
   papel: PapelFoto
 }
 
-export const fotosPub = createPub({} as { [id: string]: Foto }, (g, u) => ({
+export interface FotosPub {
+  maisRecente?: string
+  byId: { [id: string]: Foto }
+}
+export const fotosPub = createPub({
+  byId: {}
+} as FotosPub, (g, u) => ({
+  load(dados: FotosPub) {
+    u(dados)
+  },
+  dump() {
+    return g()
+  },
   adicionar(cropped: string, tam: AspectoFoto) {
     const ts = Date.now()
     const id = [Math.round(Math.random() * ts), ts].join('')
     const f: Foto = {
       ts,
       cropped,
+      grade: true,
       tam,
       papel: '15×10'
     }
-    u({
-      [id]: f,
-      ...g(),
-    })
+    const db = { ...g() }
+    db.maisRecente = id
+    db.byId[id] = f
+    u(db)
     return id
   },
   setPapel(id: string, papel: PapelFoto) {
-    const fotos = g()
-    const foto = fotos[id]
+    const db = { ...g() }
+    const foto = db.byId[id]
     if (foto) {
-      u({
-        ...fotos,
-        [id]: {
-          ...foto,
-          papel
-        }
-      })
+      foto.papel = papel
+      u(db)
+    }
+  },
+  setGrade(id: string, grade: boolean) {
+    const db = { ...g() }
+    const foto = db.byId[id]
+    if (foto) {
+      foto.grade = grade
+      u(db)
     }
   }
 }))
 
-export function useFotoMaisRecente(): Foto | undefined {
-  const fotos = fotosPub.use()
-  return fotos[0]
+export function useFotoMaisRecente(): string | undefined {
+  const db = fotosPub.use()
+  return db.maisRecente
 }
 
-export function useTodasFotos(): Foto[] {
-  const fotos = fotosPub.use()
+export function useTodasFotos(): string[] {
+  const db = fotosPub.use()
+  const fotos = db.byId
   const ids = Object.keys(fotos)
-  return ids.map((id) => fotos[id])
+  return ids
 }
 
 export function useFotoPorId(id: string): [Foto, boolean] {
-  const fotos = fotosPub.use()
+  const db = fotosPub.use()
+  const fotos = db.byId
+  debugger
   const foto = fotos[id]
   return [foto, !!foto]
 }
 
-export function useFotoPrint(foto: Foto, grade: boolean) {
+export function useFotoPrint(foto: Foto) {
   const [printBlobUrl, setPrintBlobUrl] = React.useState<undefined | null | string>(foto ? undefined : null)
   React.useEffect(() => {
     if (foto) {
-      getPrintedImg(foto.cropped, foto.tam, foto.papel, grade)
+      getPrintedImg(foto.cropped, foto.tam, foto.papel, foto.grade)
         .then(setPrintBlobUrl)
     }
-  }, [foto, foto?.cropped, foto?.tam, foto?.papel, grade])
+  }, [foto, foto?.cropped, foto?.tam, foto?.papel, foto.grade])
   return printBlobUrl
 }

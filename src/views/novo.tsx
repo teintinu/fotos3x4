@@ -32,7 +32,7 @@ export function Novo() {
     <Cartao >
       <div className={classes.cartao}>
         {enviando ?
-          (novoSt.croppedFotoId ? <FotoView fotoId={novoSt.croppedFotoId} /> : <NovoEdit />)
+          (novoSt.croppedFotoId ? <FotoView fotoId={novoSt.croppedFotoId} onCheck={novoPub.cancelar} /> : <NovoEdit />)
           :
           <div className={classes.buttons}>
             <DropzoneArea

@@ -21,14 +21,14 @@ export function App() {
 
   return (
     <div className={classes.root}>
-      {maisRecente ? <FotoBox foto={maisRecente} /> : ''}
+      {maisRecente ? <FotoBox fotoId={maisRecente} /> : ''}
       <Novo />
       <Anuncio />
       {
         fotos
           .filter((f) => f !== maisRecente)
           .map(f => (
-            <FotoBox foto={f} />
+            <FotoBox fotoId={f} />
           ))
       }
 

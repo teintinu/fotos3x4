@@ -4,7 +4,8 @@ import Paper from '@material-ui/core/Paper';
 import Zoom from '@material-ui/core/Zoom';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Cartao } from './cartao';
-import { Foto } from '../state/fotos';
+import { Foto, useFotoPorId } from '../state/fotos';
+import { FotoView } from './fotoView';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,15 +17,31 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       flexDirection: 'column',
       overflow: 'hidden',
+      '& img': {
+        transition: 'all .2s ease-in-out',
+        cursor: 'pointer',
+        '&:hover': {
+          transform: 'scale(1.1)'
+        }
+      }
     }
   }),
 );
 
-export function FotoBox({ foto }: { foto: Foto }) {
+export function FotoBox({ fotoId }: { fotoId: string }) {
   const classes = useStyles();
+  const [foto] = useFotoPorId(fotoId)
+  const [exibir, setExibir] = React.useState(false)
   return <Cartao>
     <div className={classes.cartao}>
-      y
+      <img src={foto.cropped} onClick={exibe} />
     </div>
+    {exibir ? <FotoView fotoId={fotoId} onCheck={fecha} /> : null}
   </Cartao>
+  function exibe() {
+    setExibir(true)
+  }
+  function fecha() {
+    setExibir(false)
+  }
 }

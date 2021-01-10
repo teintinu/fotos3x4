@@ -80,13 +80,33 @@ export async function getPrintedImg(cropredImageSrc: string, tamFoto: AspectoFot
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+  const spacew = Math.trunc((canvas.width - (colunas * fw * resolucaow)) / (colunas + 1))
+  const spaceh = Math.trunc((canvas.height - (linhas * fh * resolucaoh)) / (linhas + 1))
+
+  ctx.strokeStyle = "#A0A0A0"
+  ctx.setLineDash([4, 2]);
+
   for (let linha = 0; linha < linhas; linha++) {
+    const y = Math.round(linha * (fh * resolucaoh + spaceh) + spacew)
+    if (grade) {
+      ctx.beginPath();
+      ctx.moveTo(0, y - 1)
+      ctx.lineTo(canvas.width, y - 1)
+      ctx.moveTo(0, y + image.height)
+      ctx.lineTo(canvas.width, y + image.height)
+    }
     for (let coluna = 0; coluna < colunas; coluna++) {
-      ctx.drawImage(
-        image,
-        Math.round(coluna * fw * resolucaow),
-        Math.round(linha * fh * resolucaoh)
-      )
+      const x = Math.round(coluna * (fw * resolucaow + spacew) + spacew)
+      if (grade && linha === 0) {
+        ctx.moveTo(x - 1, 0)
+        ctx.lineTo(x - 1, canvas.height)
+        ctx.moveTo(x + image.width, 0)
+        ctx.lineTo(x + image.width, canvas.height)
+      }
+      ctx.drawImage(image, x, y)
+    }
+    if (grade) {
+      ctx.stroke();
     }
   }
   return canvas.toDataURL('image/jpeg');
