@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CircularProgress, Dialog, Fab, Switch } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { fotosPub, papeisFoto, useFotoPorId, useFotoPrint } from '../state/fotos';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,9 +63,12 @@ export function FotoView({ fotoId, onCheck }: { fotoId: string, onCheck: () => v
                 </Fab>
               </div>
               <div>
+                <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={deleteFoto}>
+                  <DeleteIcon />
+                </Fab><br />
                 <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={onCheck}>
                   <CheckIcon />
-                </Fab><br />
+                </Fab>
               </div>
             </div>
           </React.Fragment>
@@ -78,5 +82,9 @@ export function FotoView({ fotoId, onCheck }: { fotoId: string, onCheck: () => v
   }
   function mudaGrade(event: React.ChangeEvent<HTMLInputElement>) {
     fotosPub.setGrade(fotoId, event.target.checked)
-  };
+  }
+  function deleteFoto() {
+    fotosPub.delete(fotoId)
+    onCheck()
+  }
 }

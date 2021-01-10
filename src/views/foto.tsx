@@ -34,7 +34,9 @@ export function FotoBox({ fotoId }: { fotoId: string }) {
   const [exibir, setExibir] = React.useState(false)
   return <Cartao>
     <div className={classes.cartao}>
-      <img src={foto.cropped} onClick={exibe} />
+      {foto ?
+        <img src={foto.cropped} onClick={exibe} /> :
+        <div>?</div>}
     </div>
     {exibir ? <FotoView fotoId={fotoId} onCheck={fecha} /> : null}
   </Cartao>

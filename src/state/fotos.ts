@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPub } from "../utils/pub"
 import { getPrintedImg } from '../utils/imageUtils';
+import { saveDB } from './db';
 
 export type AspectoFoto = '3×4' | '5×7'
 export const aspectosFoto: {
@@ -53,6 +54,7 @@ export const fotosPub = createPub({
     db.maisRecente = id
     db.byId[id] = f
     u(db)
+    saveDB()
     return id
   },
   setPapel(id: string, papel: PapelFoto) {
@@ -62,6 +64,7 @@ export const fotosPub = createPub({
       foto.papel = papel
       u(db)
     }
+    saveDB()
   },
   setGrade(id: string, grade: boolean) {
     const db = { ...g() }
@@ -70,6 +73,16 @@ export const fotosPub = createPub({
       foto.grade = grade
       u(db)
     }
+    saveDB()
+  },
+  delete(id: string) {
+    const db = { ...g() }
+    delete db.byId[id]
+    debugger
+    if (id === db.maisRecente)
+      delete db.maisRecente
+    u(db)
+    saveDB()
   }
 }))
 

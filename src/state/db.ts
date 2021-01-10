@@ -18,3 +18,5 @@ export async function saveDB() {
   const db = await dbp
   await db.put('fotosPub', fotosPub.dump(), 'fotosPub')
 }
+
+setTimeout(loadDB, 100)
