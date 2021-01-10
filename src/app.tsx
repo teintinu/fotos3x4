@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Novo } from './views/novo'
 import { FotoBox } from './views/foto'
 import { Anuncio } from './views/anuncio';
-import { useFotos, useFotoMaisRecente } from './state/fotos';
+import { useTodasFotos, useFotoMaisRecente } from './state/fotos';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function App() {
   const classes = useStyles();
-  const fotos = useFotos()
+  const fotos = useTodasFotos()
   const maisRecente = useFotoMaisRecente()
 
   return (

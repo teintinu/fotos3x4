@@ -3,9 +3,12 @@ import Cropper from 'react-easy-crop';
 import { Area } from 'react-easy-crop/types';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Dialog, Fab, Slider, Snackbar } from '@material-ui/core';
-import { AspectoFoto, aspectosFoto, novoPub } from '../state/novo';
+import { novoPub } from '../state/novo';
+import { AspectoFoto, aspectosFoto } from '../state/fotos';
 import CloseIcon from '@material-ui/icons/Close';
 import CropIcon from '@material-ui/icons/Crop';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import { Point } from 'react-easy-crop/types';
 import { getCroppedImg } from '../utils/imageUtils';
 import { isMobile } from '../utils/isMobile';
@@ -64,12 +67,15 @@ export function NovoEdit() {
     x: 0, y: 0
   });
   const [ang, setAng] = React.useState(0)
-  const [zoom, setZoom] = React.useState(2)
+  const [zoom, setZoomSt] = React.useState(2)
   const [aspecto, setAspecto] = React.useState<AspectoFoto>('3×4')
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const onCropComplete = React.useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
+  const minZoom = 1
+  const maxZoom = 50
+  const zoomSpeed = 0.5
   return <Dialog open={true} fullScreen={true}>
     <div className={classes.imagem}>
       <Cropper
@@ -81,8 +87,9 @@ export function NovoEdit() {
         rotation={ang}
         onRotationChange={setAng}
         zoom={zoom}
-        zoomSpeed={0.5}
-        maxZoom={50}
+        zoomSpeed={zoomSpeed}
+        minZoom={minZoom}
+        maxZoom={maxZoom}
         onZoomChange={setZoom}
         onCropComplete={onCropComplete}
       />
@@ -107,6 +114,12 @@ export function NovoEdit() {
         />
       </div>
       <div>
+        <Fab size="small" color="primary" aria-label="Zoom In" className={classes.margin} onClick={zoomIn}>
+          <ZoomInIcon />
+        </Fab><br />
+        <Fab size="small" color="primary" aria-label="Zoom Out" className={classes.margin} onClick={zoomOut}>
+          <ZoomOutIcon />
+        </Fab><br />
         <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={novoPub.cancelar}>
           <CloseIcon />
         </Fab><br />
@@ -134,6 +147,16 @@ export function NovoEdit() {
   function setAngEv(_: any, value: any) {
     setAng(value)
   }
+  function zoomIn() {
+    setZoom(zoom * (zoomSpeed * 2.5))
+  }
+  function zoomOut() {
+    setZoom(zoom / (zoomSpeed * 2.5))
+  }
+  function setZoom(nz: number) {
+    nz = Math.min(maxZoom, Math.max(nz, minZoom))
+    setZoomSt(nz)
+  }
   function mudaAspect() {
     const keys = Object.keys(aspectosFoto)
     const idx = (keys.indexOf(aspecto) + 1) % keys.length
@@ -142,7 +165,7 @@ export function NovoEdit() {
   async function doCrop() {
     if (croppedAreaPixels) {
       const cropped = await getCroppedImg(novoUrl, croppedAreaPixels, ang)
-      novoPub.setCropped(cropped)
+      novoPub.confirmar(cropped)
     }
   }
 }

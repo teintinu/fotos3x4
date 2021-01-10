@@ -5,8 +5,8 @@ import { Button } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
 import { novoPub } from '../state/novo';
 import { NovoEdit } from './novoCrop';
-import { NovoGen } from './novoGen';
 import { isMobile } from '../utils/isMobile';
+import { FotoView } from './fotoView';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,7 +32,7 @@ export function Novo() {
     <Cartao >
       <div className={classes.cartao}>
         {enviando ?
-          (novoSt.cropped ? <NovoGen /> : <NovoEdit />)
+          (novoSt.croppedFotoId ? <FotoView fotoId={novoSt.croppedFotoId} /> : <NovoEdit />)
           :
           <div className={classes.buttons}>
             <DropzoneArea
