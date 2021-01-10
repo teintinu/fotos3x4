@@ -73,25 +73,21 @@ export async function getPrintedImg(cropredImageSrc: string, tamFoto: AspectoFot
   const colunas = Math.trunc(pw / fw)
   if (linhas < 1 || colunas < 1) return cropredImageSrc
 
-  const resolucao = image.width / fwb
-  canvas.width = pw * resolucao
-  canvas.height = ph * resolucao
+  const resolucaow = image.width / fwb
+  const resolucaoh = image.height / fhb
+  canvas.width = pw * resolucaow
+  canvas.height = ph * resolucaoh
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  // for (let linha = 0; linha < linhas; linha++) {
-  //   for (let coluna = 0; coluna < colunas; coluna++) {
-  ctx.drawImage(
-    image,
-    0 * fw,
-    0 * fh
-  )
-  ctx.drawImage(
-    image,
-    1 * fw,
-    1 * fh
-  )
-  //   }
-  // }
+  for (let linha = 0; linha < linhas; linha++) {
+    for (let coluna = 0; coluna < colunas; coluna++) {
+      ctx.drawImage(
+        image,
+        Math.round(coluna * fw * resolucaow),
+        Math.round(linha * fh * resolucaoh)
+      )
+    }
+  }
   return canvas.toDataURL('image/jpeg');
 }
