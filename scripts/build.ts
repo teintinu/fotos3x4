@@ -7,7 +7,7 @@ build({
   entryPoints: [rootDir + '/src/index.tsx'],
   bundle: true,
   minify: true,
-  outfile: rootDir + '/public/index.js',
+  outfile: rootDir + '/docs/index.js',
   define: {
     "process.env.NODE_ENV": '"production"'
   }

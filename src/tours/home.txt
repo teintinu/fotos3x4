@@ -1,0 +1,16 @@
+import { isMobile } from "../utils/isMobile";
+
+declareTour({
+  name: 'Tela inicial',
+  steps: [
+    {
+      title: 'Bem vindo ao aplicativo Foto 3x4',
+      body: 'Uma maneira econômica de fazer fotos para documentos',
+    },
+    {
+      title: 'Envio',
+      subtitle: 'Clique aqui para enviar uma foto a partir do seu ' + (isMobile ? 'telefone' : 'computador'),
+
+    },
+  ]
+}) 

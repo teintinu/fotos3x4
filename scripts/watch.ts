@@ -6,14 +6,14 @@ import * as liveServer from "live-server"
 const rootDir = resolve(join(__dirname, '..'))
 
 chokidar.watch([
-  rootDir + '/public/index.html',
+  rootDir + '/docs/index.html',
   rootDir + '/src',
 ]).on('change', devBuild)
 
 devBuild().then(() => {
   liveServer.start({
     port: 8181,
-    root: rootDir + "/public",
+    root: rootDir + "/docs",
     open: false,
     file: "index.html",
     wait: 1000,
@@ -28,7 +28,7 @@ async function devBuild() {
     minify: false,
     sourcemap: 'inline',
     sourcesContent: false,
-    outfile: rootDir + '/public/index.js',
+    outfile: rootDir + '/docs/index.js',
     define: {
       "process.env.NODE_ENV": '"production"'
     }

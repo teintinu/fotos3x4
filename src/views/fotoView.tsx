@@ -130,13 +130,13 @@ export function FotoView({ fotoId, onCheck }: { fotoId: string, onCheck: () => v
       window.print();
     }
   }
-  async function copiarFoto() {
-    if (fotoPrint) {
-      const { state } = await navigator.permissions.query({ name: 'clipboard-write' as any })
-      if (state === 'granted') {
-        const [blob, contentType] = makeblob(fotoPrint)
-        await navigator.clipboard.write([new ClipboardItem({ [contentType]: blob })])
-      }
-    }
-  }
+  // async function copiarFoto() {
+  //   if (fotoPrint) {
+  //     const { state } = await navigator.permissions.query({ name: 'clipboard-write' as any })
+  //     if (state === 'granted') {
+  //       const [blob, contentType] = makeblob(fotoPrint)
+  //       await navigator.clipboard.write([new ClipboardItem({ [contentType]: blob })])
+  //     }
+  //   }
+  // }
 }
