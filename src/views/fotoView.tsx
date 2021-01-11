@@ -1,9 +1,14 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CircularProgress, Dialog, Fab, Switch } from '@material-ui/core';
+import { CircularProgress, Dialog, Fab, Switch, Tooltip } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PrintIcon from '@material-ui/icons/Print';
+import CopyIcon from '@material-ui/icons/FileCopy';
+import DownloadIcon from '@material-ui/icons/GetApp';
+
 import { fotosPub, papeisFoto, useFotoPorId, useFotoPrint } from '../state/fotos';
+import { makeblob } from '../utils/imageUtils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       "& img": {
         border: '1px solid black',
+        objectFit: 'cover',
         maxWidth: '90%',
         maxHeight: '90%',
       }
@@ -47,28 +53,54 @@ export function FotoView({ fotoId, onCheck }: { fotoId: string, onCheck: () => v
         fotoPrint === null ? <div>erro na foto</div> :
           <React.Fragment>
             <div className={classes.imagem}>
-              <img src={fotoPrint} />
+              <img id="fotoToPrint" src={fotoPrint} />
             </div>
             <div className={classes.buttons}>
               <div>
-                <Switch
-                  checked={foto.grade}
-                  onChange={mudaGrade}
-                  name="checkedA"
-                  inputProps={{ 'aria-label': 'Grade' }}
-                />
+                <Tooltip title="Tamanho do papel em centímetros">
+                  <Fab size="large" color="primary" aria-label="add" className={classes.margin} onClick={mudaPapel}>
+                    {foto.papel}
+                  </Fab>
+                </Tooltip><br />
+
+                <Tooltip title="Imprimir grade">
+                  <Switch
+                    checked={foto.grade}
+                    onChange={mudaGrade}
+                    name="checkedA"
+                    color="primary"
+                    inputProps={{ 'aria-label': 'Grade' }}
+                  />
+                </Tooltip>
                 <br />
-                <Fab size="small" color="secondary" aria-label="add" className={classes.margin} onClick={mudaPapel}>
-                  {foto.papel}
-                </Fab>
+
+                <Tooltip title="Imprimir">
+                  <Fab size="small" color="secondary" aria-label="imprimir" className={classes.margin} onClick={imprimirFoto}>
+                    <PrintIcon />
+                  </Fab></Tooltip><br />
+                {/* <Tooltip title="Copiar foto para área de trabalho">
+                  <Fab size="small" color="primary" aria-label="copiar" className={classes.margin} onClick={copiarFoto}>
+                    <CopyIcon />
+                  </Fab>
+                </Tooltip><br /> */}
+                <Tooltip title="Baixar foto">
+                  <a href={fotoPrint} download>
+                    <Fab size="small" color="primary" aria-label="copiar" className={classes.margin}>
+                      <DownloadIcon />
+                    </Fab>
+                  </a>
+                </Tooltip>
               </div>
               <div>
-                <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={deleteFoto}>
-                  <DeleteIcon />
-                </Fab><br />
-                <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={onCheck}>
-                  <CheckIcon />
-                </Fab>
+                <Tooltip title="Excluir essa foto">
+                  <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={deleteFoto}>
+                    <DeleteIcon />
+                  </Fab></Tooltip><br />
+                <Tooltip title="Retornar ao menu">
+                  <Fab size="small" color="primary" aria-label="close" className={classes.margin} onClick={onCheck}>
+                    <CheckIcon />
+                  </Fab>
+                </Tooltip>
               </div>
             </div>
           </React.Fragment>
@@ -86,5 +118,25 @@ export function FotoView({ fotoId, onCheck }: { fotoId: string, onCheck: () => v
   function deleteFoto() {
     fotosPub.delete(fotoId)
     onCheck()
+  }
+  function imprimirFoto() {
+    const docst = document.querySelector('style')
+    if (docst && window.print) {
+      docst.textContent =
+        `@media print {
+        * { visibility: hidden; }
+        #fotoToPrint { visibility: visible; }
+     }`;
+      window.print();
+    }
+  }
+  async function copiarFoto() {
+    if (fotoPrint) {
+      const { state } = await navigator.permissions.query({ name: 'clipboard-write' as any })
+      if (state === 'granted') {
+        const [blob, contentType] = makeblob(fotoPrint)
+        await navigator.clipboard.write([new ClipboardItem({ [contentType]: blob })])
+      }
+    }
   }
 }

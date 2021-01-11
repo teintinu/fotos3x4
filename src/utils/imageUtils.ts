@@ -58,7 +58,6 @@ export async function getCroppedImg(imageSrc: string, pixelCrop: Area, rotation 
 }
 
 export async function getPrintedImg(cropredImageSrc: string, tamFoto: AspectoFoto, tamPapel: PapelFoto, grade: boolean) {
-  debugger
   if (tamPapel === '-') return cropredImageSrc
   const image = await createImage(cropredImageSrc)
   const canvas = document.createElement('canvas')
@@ -67,8 +66,8 @@ export async function getPrintedImg(cropredImageSrc: string, tamFoto: AspectoFot
 
   const [pw, ph] = pegaTamanho(tamPapel)
   const [fwb, fhb] = pegaTamanho(tamFoto)
-  const fw = fwb + 0.1
-  const fh = fhb + 0.1
+  const fw = fwb
+  const fh = fhb
   const linhas = Math.trunc(ph / fh)
   const colunas = Math.trunc(pw / fw)
   if (linhas < 1 || colunas < 1) return cropredImageSrc
@@ -110,4 +109,19 @@ export async function getPrintedImg(cropredImageSrc: string, tamFoto: AspectoFot
     }
   }
   return canvas.toDataURL('image/jpeg');
+}
+
+export function makeblob(dataURL: string) {
+  const BASE64_MARKER = ';base64,';
+  const parts = dataURL.split(BASE64_MARKER);
+  const contentType = parts[0].split(':')[1];
+  const raw = window.atob(parts[1]);
+  const rawLength = raw.length;
+  const uInt8Array = new Uint8Array(rawLength);
+
+  for (let i = 0; i < rawLength; ++i) {
+    uInt8Array[i] = raw.charCodeAt(i);
+  }
+
+  return [new Blob([uInt8Array], { type: contentType }), contentType];
 }

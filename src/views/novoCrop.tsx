@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { Area } from 'react-easy-crop/types';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Dialog, Fab, Slider, Snackbar } from '@material-ui/core';
+import { Dialog, Fab, Slider, Snackbar, Tooltip } from '@material-ui/core';
 import { novoPub } from '../state/novo';
 import { AspectoFoto, aspectosFoto } from '../state/fotos';
 import CloseIcon from '@material-ui/icons/Close';
@@ -61,14 +61,14 @@ const marks = [
 
 export function NovoEdit() {
   const classes = useStyles();
-  const novoUrl = novoPub.use().enviando[0]
+  const novoSt = novoPub.use()
+  const novoUrl = novoSt.enviando[0]
   const [ajuda, setAjuda] = React.useState(true)
   const [crop, setCrop] = React.useState<Point>({
     x: 0, y: 0
   });
   const [ang, setAng] = React.useState(0)
   const [zoom, setZoomSt] = React.useState(2)
-  const [aspecto, setAspecto] = React.useState<AspectoFoto>('3×4')
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const onCropComplete = React.useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels)
@@ -81,7 +81,7 @@ export function NovoEdit() {
       <Cropper
         image={novoUrl}
         restrictPosition={false}
-        aspect={aspectosFoto[aspecto]}
+        aspect={aspectosFoto[novoSt.aspecto]}
         crop={crop}
         onCropChange={setCrop}
         rotation={ang}
@@ -95,37 +95,47 @@ export function NovoEdit() {
       />
     </div>
     <div className={classes.buttons}>
-      <Fab size="small" color="secondary" aria-label="add" className={classes.margin} onClick={mudaAspect}>
-        {aspecto}
-      </Fab>
+      <Tooltip title={"Mudar tamanho do papel. Tamanho atual: " + novoSt.aspecto}>
+        <Fab size="small" color="secondary" aria-label="add" className={classes.margin} onClick={mudaAspect}>
+          {novoSt.aspecto}
+        </Fab>
+      </Tooltip>
       <div style={({ width: 150 })}>
-        <Slider
-          defaultValue={0}
-          getAriaValueText={angText}
-          aria-labelledby="discrete-slider-custom"
-          step={3}
-          valueLabelDisplay="auto"
-          color='secondary'
-          track={false}
-          min={-90}
-          max={90}
-          marks={marks}
-          onChange={setAngEv}
-        />
+        <Tooltip title={"Rotacionar a foto"}>
+          <Slider
+            defaultValue={0}
+            getAriaValueText={angText}
+            aria-labelledby="discrete-slider-custom"
+            step={3}
+            valueLabelDisplay="auto"
+            color='secondary'
+            track={false}
+            min={-90}
+            max={90}
+            marks={marks}
+            onChange={setAngEv}
+          />
+        </Tooltip>
       </div>
       <div>
-        <Fab size="small" color="primary" aria-label="Zoom In" className={classes.margin} onClick={zoomIn}>
-          <ZoomInIcon />
-        </Fab><br />
-        <Fab size="small" color="primary" aria-label="Zoom Out" className={classes.margin} onClick={zoomOut}>
-          <ZoomOutIcon />
-        </Fab><br />
-        <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={novoPub.cancelar}>
-          <CloseIcon />
-        </Fab><br />
-        <Fab size="small" color="primary" aria-label="add" className={classes.margin} onClick={doCrop}>
-          <CropIcon />
-        </Fab>
+        <Tooltip title={"Aumentar zoom"}>
+          <Fab size="small" color="primary" aria-label="Zoom In" className={classes.margin} onClick={zoomIn}>
+            <ZoomInIcon />
+          </Fab></Tooltip><br />
+        <Tooltip title={"Diminuir zoom"}>
+          <Fab size="small" color="primary" aria-label="Zoom Out" className={classes.margin} onClick={zoomOut}>
+            <ZoomOutIcon />
+          </Fab></Tooltip><br />
+        <Tooltip title={"Retornar"}>
+          <Fab size="small" color="secondary" aria-label="close" className={classes.margin} onClick={novoPub.cancelar}>
+            <CloseIcon />
+          </Fab>
+        </Tooltip><br />
+        <Tooltip title={"Recortar foto como " + novoSt.aspecto}>
+          <Fab size="small" color="primary" aria-label="add" className={classes.margin} onClick={doCrop}>
+            <CropIcon />
+          </Fab>
+        </Tooltip>
       </div>
     </div>
     <Snackbar open={ajuda} autoHideDuration={6000} message=
@@ -159,8 +169,8 @@ export function NovoEdit() {
   }
   function mudaAspect() {
     const keys = Object.keys(aspectosFoto)
-    const idx = (keys.indexOf(aspecto) + 1) % keys.length
-    setAspecto(keys[idx] as any)
+    const idx = (keys.indexOf(novoSt.aspecto) + 1) % keys.length
+    novoPub.setAspecto(keys[idx] as any)
   }
   async function doCrop() {
     if (croppedAreaPixels) {

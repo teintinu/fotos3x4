@@ -20,6 +20,13 @@ export const novoPub = createPub({
       enviando: [...v.enviando, window.URL.createObjectURL(arq)]
     })
   },
+  setAspecto(aspecto: AspectoFoto) {
+    const n = g()
+    u({
+      ...g(),
+      aspecto
+    })
+  },
   confirmar(cropped: string) {
     const n = g()
     const croppedFotoId = fotosPub.adicionar(cropped, n.aspecto)

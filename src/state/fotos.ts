@@ -11,12 +11,15 @@ export const aspectosFoto: {
   '5×7': 5 / 7
 }
 
-export type PapelFoto = '-' | '15×10'
+export type PapelFoto = '-' | '12×7' | '15×10' | '18×13'
+
 export const papeisFoto: {
-  [key in PapelFoto]: number
+  [key in PapelFoto]: [number, number]
 } = {
-  '-': 0,
-  '15×10': 15 / 10,
+  '-': [0, 0],
+  '12×7': [1500, 900],
+  '15×10': [1800, 1200],
+  '18×13': [2100, 1500],
 }
 
 export interface Foto {
@@ -78,7 +81,6 @@ export const fotosPub = createPub({
   delete(id: string) {
     const db = { ...g() }
     delete db.byId[id]
-    debugger
     if (id === db.maisRecente)
       delete db.maisRecente
     u(db)
@@ -101,7 +103,6 @@ export function useTodasFotos(): string[] {
 export function useFotoPorId(id: string): [Foto, boolean] {
   const db = fotosPub.use()
   const fotos = db.byId
-  debugger
   const foto = fotos[id]
   return [foto, !!foto]
 }

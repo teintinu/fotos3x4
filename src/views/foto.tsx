@@ -17,12 +17,23 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       flexDirection: 'column',
       overflow: 'hidden',
+      cursor: 'pointer',
       '& img': {
+        objectFit: 'cover',
         transition: 'all .2s ease-in-out',
-        cursor: 'pointer',
-        '&:hover': {
-          transform: 'scale(1.1)'
-        }
+      },
+      '& span': {
+        position: 'relative',
+        left: 10,
+        bottom: 20,
+        transition: 'all .2s ease-in-out',
+        opacity: 0,
+      },
+      '&:hover img': {
+        transform: 'scale(0.9)'
+      },
+      '&:hover span': {
+        opacity: 1
       }
     }
   }),
@@ -36,6 +47,9 @@ export function FotoBox({ fotoId }: { fotoId: string }) {
     <div className={classes.cartao}>
       {foto ?
         <img src={foto.cropped} onClick={exibe} /> :
+        <div>?</div>}
+      {foto ?
+        <span onClick={exibe} >{foto.tam} </span> :
         <div>?</div>}
     </div>
     {exibir ? <FotoView fotoId={fotoId} onCheck={fecha} /> : null}
