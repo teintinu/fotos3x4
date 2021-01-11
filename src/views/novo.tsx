@@ -41,15 +41,16 @@ export function Novo() {
                   "Enviar foto da galeria" :
                   "Arrasta a foto pra cá ou clique aqui"
               }
+              maxFileSize={30 * 1024 * 1024}
               showPreviews={false}
               showPreviewsInDropzone={false}
               acceptedFiles={["image/*"]}
               onChange={uploadFiles}
             />
-            <div>&nbsp;</div>
-            <Button variant="contained" color='secondary'>Tirar uma foto</Button>
-            <div>&nbsp;</div>
-            <Button variant="contained" color='primary'>Colar foto</Button>
+            {/* <div>&nbsp;</div>
+            <Button variant="contained" color='secondary'>Tirar uma foto</Button> */}
+            {/* <div>&nbsp;</div>
+            <Button variant="contained" color='primary'>Colar foto</Button> */}
           </div>
         }
       </div>

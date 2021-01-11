@@ -1,6 +1,7 @@
-var CACHE_NAME = 'fotos-3x4-static-v1';
+var CACHE_NAME = 'fotos-3x4-static-v1.0.2';
 
 self.addEventListener('install', function (event) {
+  console.log('CACHE_NAME')
   event.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
       return cache.addAll([

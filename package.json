@@ -1,6 +1,6 @@
 {
   "name": "fotos3x4",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Photos for documents",
   "main": "index.js",
   "private": true,
