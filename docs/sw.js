@@ -1,4 +1,4 @@
-var CACHE_NAME = 'fotos-3x4-static-v1.0.2';
+var CACHE_NAME = 'fotos-3x4-static-v1.0.3';
 
 self.addEventListener('install', function (event) {
   console.log('CACHE_NAME')

@@ -24,6 +24,7 @@ export function App() {
     <div className={classes.root}>
       {maisRecente ? <FotoBox fotoId={maisRecente} /> : ''}
       <Novo />
+      <Anuncio />
       {
         fotos
           .filter((f) => f !== maisRecente)

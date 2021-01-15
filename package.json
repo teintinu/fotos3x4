@@ -1,12 +1,13 @@
 {
   "name": "fotos3x4",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Photos for documents",
   "main": "index.js",
   "private": true,
   "scripts": {
     "build": "esr scripts/build.ts",
     "start": "esr scripts/watch.ts",
+    "deploy": "npm run build ; firebase deploy",
     "type-checking": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

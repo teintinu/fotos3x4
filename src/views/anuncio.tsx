@@ -14,10 +14,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       overflow: 'hidden',
     },
-    anuncio: {
-      width: 300,
-      height: 200,
-    }
   }),
 );
 
@@ -27,12 +23,10 @@ export function Anuncio() {
   return (
     <Cartao >
       <div className={classes.cartao}>
-        <div className={classes.anuncio}>
-          anuncio 1
-      </div>
-        <div className={classes.anuncio}>
-          anuncio 2
-      </div>
+        <ins className="adsbygoogle"
+          style={({ display: "inline-block", width: 300, height: 200 })}
+          data-ad-client="ca-pub-7270098487606102"
+          data-ad-slot="2904311422"></ins>
       </div>
     </Cartao>
   );
